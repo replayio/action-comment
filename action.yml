@@ -1,0 +1,51 @@
+name: Replay Comment
+author: Replay.io
+description: Run and record Playwright tests with Replay
+inputs:
+  api-key:
+    required: true
+    description: Replay.io API Key
+  issue-number:
+    required: true
+    description: Pull Request on which to comment
+  recordings:
+    description: Array of uploaded recordings from the Replay CLI
+  summary-message:
+    default: |
+      We uploaded **{count, plural,
+        one {# replay}
+        other {# replays}
+      }** linked below.
+  test-run-id:
+    description: UUID of the Replay test run
+  test-run-message:
+    default: You can also view the [entire test run]({link}) on Replay.
+runs:
+  using: composite
+  steps:
+    - name: 'Comment PR'
+      uses: actions/github-script@v6
+      if: ${{ always() }}
+      with:
+        result-encoding: string
+        script: |
+          const comment = require(process.env.GITHUB_ACTION_PATH + '/dist/comment.js');
+
+          const apiKey = "${{ inputs.api-key }}";
+          const issue_number = "${{ inputs.issue-number }}";
+          const recordings = ${{ inputs.recordings || '[]' }};
+          const summaryMessage =  "${{ inputs.summary-message }}";
+          const testRunMessage =  "${{ inputs.test-run-message }}";
+          const testRunId = "${{ inputs.test-run-id }}";
+
+          return await comment({
+            apiKey,
+            context,
+            github,
+            issue_number,
+            recordings,
+            summaryMessage,
+            testRunId,
+            testRunMessage,
+          });
+

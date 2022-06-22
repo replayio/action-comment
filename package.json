@@ -1,0 +1,26 @@
+{
+  "name": "action-comment",
+  "version": "0.1.0",
+  "description": "Comment on PRs with results of an Replay automated test run",
+  "scripts": {
+    "tag": "GIT_TAG=$(node -e \"console.log('v'+require('./package.json').version)\"); test -z \"$(git tag -l $GIT_TAG)\" && npm i && git add . && git commit -m \"Publish $GIT_TAG\" && git tag $GIT_TAG && echo \"Tagged $GIT_TAG\" || echo \"Tag failed\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild comment.js --bundle --platform=node --outdir=dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/replayio/action-comment.git"
+  },
+  "author": "Replay.io",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/replayio/action-comment/issues"
+  },
+  "homepage": "https://github.com/replayio/action-comment#readme",
+  "devDependencies": {
+    "esbuild": "^0.14.45"
+  },
+  "dependencies": {
+    "@formatjs/intl": "^2.3.0"
+  }
+}
