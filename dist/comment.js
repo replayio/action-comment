@@ -9544,13 +9544,13 @@ async function getWorkspaceId(apiKey) {
 }
 async function comment({
   apiKey,
-  github,
   context,
+  github,
   issue_number,
   recordings,
   summaryMessage,
-  testRunMessage,
-  testRunId
+  testRunId,
+  testRunMessage
 }) {
   const {
     repo: { owner, repo }

@@ -34,8 +34,8 @@ runs:
           const apiKey = "${{ inputs.api-key }}";
           const issue_number = "${{ inputs.issue-number }}";
           const recordings = ${{ inputs.recordings || '[]' }};
-          const summaryMessage =  "${{ inputs.summary-message }}";
-          const testRunMessage =  "${{ inputs.test-run-message }}";
+          const summaryMessage =  `${{ inputs.summary-message }}`;
+          const testRunMessage =  `${{ inputs.test-run-message }}`;
           const testRunId = "${{ inputs.test-run-id }}";
 
           return await comment({
