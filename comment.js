@@ -101,7 +101,7 @@ async function comment({
     const workspaceId = await getWorkspaceId(apiKey);
     if (workspaceId) {
       formattedTestRunMessage = intl.formatMessage(intl.messages.testRunMessage, {
-        link: `https://app.replay.io/team/${workspaceId}/test-run/${testRunId}`
+        link: `https://app.replay.io/team/${workspaceId}/runs/${testRunId}`
       });
     }
   }
