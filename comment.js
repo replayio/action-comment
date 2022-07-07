@@ -35,7 +35,7 @@ async function getWorkspaceId(apiKey) {
     const json = await resp.json();
 
     if (json.errors) {
-      throw new Error(errors[0].message);
+      throw new Error(json.errors[0].message);
     } else if (!json.data) {
       throw new Error("No data was returned");
     } else if (json.data.user) {

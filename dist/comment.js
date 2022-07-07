@@ -9526,7 +9526,7 @@ async function getWorkspaceId(apiKey) {
     });
     const json = await resp.json();
     if (json.errors) {
-      throw new Error(errors[0].message);
+      throw new Error(json.errors[0].message);
     } else if (!json.data) {
       throw new Error("No data was returned");
     } else if (json.data.user) {
@@ -9581,7 +9581,7 @@ async function comment({
     const workspaceId = await getWorkspaceId(apiKey);
     if (workspaceId) {
       formattedTestRunMessage = intl.formatMessage(intl.messages.testRunMessage, {
-        link: `https://app.replay.io/team/${workspaceId}/test-run/${testRunId}`
+        link: `https://app.replay.io/team/${workspaceId}/runs/${testRunId}`
       });
     }
   }
