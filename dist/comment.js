@@ -12395,19 +12395,50 @@ async function comment({
       });
     }
   }
+  const commitId = recordings[0].metadata.source.commit.id;
+  const failedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result !== "passed");
+  const passedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result === "passed");
   const body = `# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
 
-  :wave: Hey there! ${intl.formatMessage(intl.messages.summaryMessage, { count: recordings.length }).trim()}
-  
-  ${formattedTestRunMessage}
-  
-  ${recordings.map(({ id, metadata: { title } }) => `* [${title || id}](https://app.replay.io/recording/${id})`).join("\n")}`;
+    ${recordings.length} replays were recorded for ${commitId}.
+
+    ${generateDetailsString(failedRecordings, false)}
+    ${generateDetailsString(passedRecordings, true)}
+
+    ${formattedTestRunMessage}
+  `;
   return github.rest.issues.createComment({
     issue_number,
     owner,
     repo,
     body
   });
+}
+function generateDetailsString(recordings, isPassed) {
+  const summary = isPassed ? `
+      <summary>
+          <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177834869-851c4e78-e9d8-4ea3-bc1d-5bc372ab593a.png">
+          <b>${recordings.length} Passed</b>
+        </summary>
+    ` : `
+      <summary>
+        <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177835072-8cafcea8-146d-410a-b02e-321390e8bd95.png">    
+        <b>${recordings.length} Failed</b>
+      </summary>
+    `;
+  return `
+    <details open=${!isPassed}>
+      ${summary}
+      ${generateRecordingListString(recordings)}
+    </details>
+  `;
+}
+function generateRecordingListString(recordings) {
+  return `
+  <ul>
+    ${recordings.map(({ id, metadata: { title } }) => `<li><a href=https://app.replay.io/recording/${id}>${title || id}</a></li>`).join("\n")}
+  </ul>
+  `;
 }
 module.exports = comment;
 /*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
