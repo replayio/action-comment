@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const dedent = require("dedent");
 const {createIntl} = require("@formatjs/intl");
 
 async function getWorkspaceId(apiKey) {
@@ -111,14 +112,14 @@ async function comment({
   const failedRecordings = recordings.filter(r => r.metadata.test.result && r.metadata.test.result !== "passed");
   const passedRecordings = recordings.filter(r => r.metadata.test.result && r.metadata.test.result === "passed");
 
-  const body = `# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
+  const body = dedent`# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
 
-    ${recordings.length} replays were recorded for ${commitId}.
+  **${recordings.length} replays** were recorded for ${commitId}.
 
-    ${generateDetailsString(failedRecordings, false)}
-    ${generateDetailsString(passedRecordings, true)}
+  ${generateDetailsString(failedRecordings, false)}
+  ${generateDetailsString(passedRecordings, true)}
 
-    ${formattedTestRunMessage}
+  ${formattedTestRunMessage}
   `;
 
   return github.rest.issues.createComment({
@@ -131,21 +132,21 @@ async function comment({
 
 function generateDetailsString(recordings, isPassed) {
   const summary = isPassed ? 
-    `
+    dedent`
       <summary>
           <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177834869-851c4e78-e9d8-4ea3-bc1d-5bc372ab593a.png">
           <b>${recordings.length} Passed</b>
         </summary>
     ` : 
-    `
+    dedent`
       <summary>
         <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177835072-8cafcea8-146d-410a-b02e-321390e8bd95.png">    
         <b>${recordings.length} Failed</b>
       </summary>
     `;
   
-  return `
-    <details open=${!isPassed}>
+  return dedent`
+    <details ${!isPassed && "open"}>
       ${summary}
       ${generateRecordingListString(recordings)}
     </details>
@@ -153,7 +154,7 @@ function generateDetailsString(recordings, isPassed) {
 }
 
 function generateRecordingListString(recordings) {
-  return `
+  return dedent`
   <ul>
     ${
       recordings

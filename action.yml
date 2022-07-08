@@ -19,7 +19,7 @@ inputs:
   test-run-id:
     description: UUID of the Replay test run
   test-run-message:
-    default: ​[View test run ↗︎]({link}) on Replay.
+    default: View [test run on Replay ↗︎]({link})
 runs:
   using: composite
   steps:

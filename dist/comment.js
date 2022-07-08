@@ -5658,6 +5658,51 @@ var init_src = __esm({
   }
 });
 
+// node_modules/dedent/dist/dedent.js
+var require_dedent = __commonJS({
+  "node_modules/dedent/dist/dedent.js"(exports2, module2) {
+    "use strict";
+    function dedent2(strings) {
+      var raw = void 0;
+      if (typeof strings === "string") {
+        raw = [strings];
+      } else {
+        raw = strings.raw;
+      }
+      var result = "";
+      for (var i2 = 0; i2 < raw.length; i2++) {
+        result += raw[i2].replace(/\\\n[ \t]*/g, "").replace(/\\`/g, "`");
+        if (i2 < (arguments.length <= 1 ? 0 : arguments.length - 1)) {
+          result += arguments.length <= i2 + 1 ? void 0 : arguments[i2 + 1];
+        }
+      }
+      var lines = result.split("\n");
+      var mindent = null;
+      lines.forEach(function(l) {
+        var m2 = l.match(/^(\s+)\S+/);
+        if (m2) {
+          var indent = m2[1].length;
+          if (!mindent) {
+            mindent = indent;
+          } else {
+            mindent = Math.min(mindent, indent);
+          }
+        }
+      });
+      if (mindent !== null) {
+        result = lines.map(function(l) {
+          return l[0] === " " ? l.slice(mindent) : l;
+        }).join("\n");
+      }
+      result = result.trim();
+      return result.replace(/\\n/g, "\n");
+    }
+    if (typeof module2 !== "undefined") {
+      module2.exports = dedent2;
+    }
+  }
+});
+
 // node_modules/tslib/tslib.js
 var require_tslib = __commonJS({
   "node_modules/tslib/tslib.js"(exports2, module2) {
@@ -12303,6 +12348,7 @@ var require_intl = __commonJS({
 
 // comment.js
 var fetch2 = (init_src(), __toCommonJS(src_exports));
+var dedent = require_dedent();
 var { createIntl } = require_intl();
 async function getWorkspaceId(apiKey) {
   try {
@@ -12398,14 +12444,14 @@ async function comment({
   const commitId = recordings[0].metadata.source.commit.id;
   const failedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result !== "passed");
   const passedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result === "passed");
-  const body = `# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
+  const body = dedent`# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
 
-    ${recordings.length} replays were recorded for ${commitId}.
+  **${recordings.length} replays** were recorded for ${commitId}.
 
-    ${generateDetailsString(failedRecordings, false)}
-    ${generateDetailsString(passedRecordings, true)}
+  ${generateDetailsString(failedRecordings, false)}
+  ${generateDetailsString(passedRecordings, true)}
 
-    ${formattedTestRunMessage}
+  ${formattedTestRunMessage}
   `;
   return github.rest.issues.createComment({
     issue_number,
@@ -12415,26 +12461,26 @@ async function comment({
   });
 }
 function generateDetailsString(recordings, isPassed) {
-  const summary = isPassed ? `
+  const summary = isPassed ? dedent`
       <summary>
           <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177834869-851c4e78-e9d8-4ea3-bc1d-5bc372ab593a.png">
           <b>${recordings.length} Passed</b>
         </summary>
-    ` : `
+    ` : dedent`
       <summary>
         <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177835072-8cafcea8-146d-410a-b02e-321390e8bd95.png">    
         <b>${recordings.length} Failed</b>
       </summary>
     `;
-  return `
-    <details open=${!isPassed}>
+  return dedent`
+    <details ${!isPassed && "open"}>
       ${summary}
       ${generateRecordingListString(recordings)}
     </details>
   `;
 }
 function generateRecordingListString(recordings) {
-  return `
+  return dedent`
   <ul>
     ${recordings.map(({ id, metadata: { title } }) => `<li><a href=https://app.replay.io/recording/${id}>${title || id}</a></li>`).join("\n")}
   </ul>

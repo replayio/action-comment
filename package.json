@@ -21,6 +21,8 @@
     "esbuild": "^0.14.45"
   },
   "dependencies": {
-    "@formatjs/intl": "^2.3.0"
+    "@formatjs/intl": "^2.3.0",
+    "dedent": "^0.7.0",
+    "node-fetch": "^3.2.6"
   }
 }
