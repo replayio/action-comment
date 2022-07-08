@@ -9,7 +9,9 @@ inputs:
     required: true
     description: Pull Request on which to comment
   recordings:
-    description: Array of uploaded recordings from the Replay CLI
+    description: Array of uploaded recordings from the Replay CLI. If `recordings-path` is also provided, `recordings` takes precedence.
+  recordings-path:
+    description: Path to a file containing array of uploaded recordings from the Replay CLI. If `recordings` is also provided, `recordings` takes precedence.
   summary-message:
     default: |
       We uploaded **{count, plural,
@@ -29,14 +31,30 @@ runs:
       with:
         result-encoding: string
         script: |
+          const fs = require("fs");
           const comment = require(process.env.GITHUB_ACTION_PATH + '/dist/comment.js');
 
           const apiKey = "${{ inputs.api-key }}";
           const issue_number = "${{ inputs.issue-number }}";
-          const recordings = ${{ inputs.recordings || '[]' }};
+          let recordings = ${{ inputs.recordings || 'null' }};
+          const recordingsPath = ${{ inputs.recordings-path || 'null' }};
           const summaryMessage =  `${{ inputs.summary-message }}`;
           const testRunMessage =  `${{ inputs.test-run-message }}`;
           const testRunId = "${{ inputs.test-run-id }}";
+
+
+          if (!recordings && recordingsPath) {
+            try {
+              recordings = JSON.parse(fs.readFileSync(recordingsPath).toString());
+            } catch (e) {
+              console.error(e);
+            }
+          }
+
+          if (!recordings && !recordingsPath) {
+            console.error("No recordings provided.");
+            return;
+          }
 
           return await comment({
             apiKey,
