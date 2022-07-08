@@ -12435,12 +12435,17 @@ async function comment({
   let formattedTestRunMessage = "";
   if (apiKey && testRunId) {
     const workspaceId = await getWorkspaceId(apiKey);
+    console.log(">>>>", 1);
     if (workspaceId) {
+      console.log(">>>>", 2);
       formattedTestRunMessage = intl.formatMessage(intl.messages.testRunMessage, {
         link: `https://app.replay.io/team/${workspaceId}/runs/${testRunId}`
       });
     }
   }
+  console.log({ apiKey });
+  console.log({ testRunId });
+  console.log({ formattedTestRunMessage });
   const commitId = recordings[0].metadata.source.commit.id;
   const failedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result !== "passed");
   const passedRecordings = recordings.filter((r2) => r2.metadata.test.result && r2.metadata.test.result === "passed");
