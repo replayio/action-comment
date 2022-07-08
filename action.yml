@@ -37,7 +37,7 @@ runs:
           const apiKey = "${{ inputs.api-key }}";
           const issue_number = "${{ inputs.issue-number }}";
           let recordings = ${{ inputs.recordings || 'null' }};
-          const recordingsPath = ${{ inputs.recordings-path || 'null' }};
+          const recordingsPath = `${{ inputs.recordings-path || '' }}`;
           const summaryMessage =  `${{ inputs.summary-message }}`;
           const testRunMessage =  `${{ inputs.test-run-message }}`;
           const testRunId = "${{ inputs.test-run-id }}";
