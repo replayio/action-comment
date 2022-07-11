@@ -9634,7 +9634,7 @@ async function comment({
   const commitId = recordings[0].metadata.source.commit.id;
   const failedRecordings = recordings.filter((r) => r.metadata.test.result && r.metadata.test.result !== "passed");
   const passedRecordings = recordings.filter((r) => r.metadata.test.result && r.metadata.test.result === "passed");
-  const body = dedent`# [![logo](https://static.replay.io/images/logo-horizontal-small-light.svg)](https://app.replay.io)
+  const body = dedent`<img src="https://static.replay.io/images/logo-horizontal-small-light.svg">
 
   **${recordings.length} replays** were recorded for ${commitId}.
 
