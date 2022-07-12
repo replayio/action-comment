@@ -9634,7 +9634,7 @@ async function comment({
   const commitId = recordings[0].metadata.source.commit.id;
   const failedRecordings = recordings.filter((r) => r.metadata.test.result && r.metadata.test.result !== "passed");
   const passedRecordings = recordings.filter((r) => r.metadata.test.result && r.metadata.test.result === "passed");
-  const body = dedent`<img src="https://static.replay.io/images/logo-horizontal-small-light.svg">
+  const body = dedent`<picture><img src="https://static.replay.io/images/logo-horizontal-small-light.svg"></picture>
 
   **${recordings.length} replays** were recorded for ${commitId}.
 
@@ -9653,12 +9653,16 @@ async function comment({
 function generateDetailsString(recordings, isPassed) {
   const summary = isPassed ? dedent`
       <summary>
+        <picture>
           <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177834869-851c4e78-e9d8-4ea3-bc1d-5bc372ab593a.png">
-          <b>${recordings.length} Passed</b>
-        </summary>
+        <picture>
+        <b>${recordings.length} Passed</b>
+      </summary>
     ` : dedent`
       <summary>
-        <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177835072-8cafcea8-146d-410a-b02e-321390e8bd95.png">    
+        <picture>
+          <img width="14" alt="image" src="https://user-images.githubusercontent.com/15959269/177835072-8cafcea8-146d-410a-b02e-321390e8bd95.png">    
+        </picture>
         <b>${recordings.length} Failed</b>
       </summary>
     `;
