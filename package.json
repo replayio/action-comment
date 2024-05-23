@@ -1,6 +1,6 @@
 {
   "name": "action-comment",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comment on PRs with results of an Replay automated test run",
   "scripts": {
     "tag": "GIT_TAG=$(node -e \"console.log('v'+require('./package.json').version)\"); test -z \"$(git tag -l $GIT_TAG)\" && npm i && git add . && git commit -m \"Publish $GIT_TAG\" && git tag $GIT_TAG && echo \"Tagged $GIT_TAG\" || echo \"Tag failed\"",
